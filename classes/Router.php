@@ -7,6 +7,14 @@ use exceptions\RouterException;
  */
 class Router
 {
+    const DEFAULT_VERB = 'GET';
+
+    /**
+     * Verb of the current request
+     * @var string
+     */
+    private $verb = self::DEFAULT_VERB;
+
     /**
      * Current URI to parse
      * @var string
@@ -21,13 +29,19 @@ class Router
 
     /**
      * Router constructor.
-     * @param array $appConfig
+     * @param array  $appConfig
      * @param string $uri
+     * @param null   $verb
      */
-    public function __construct($appConfig, $uri)
+    public function __construct($appConfig, $uri, $verb = null)
     {
         $this->appConfig = $appConfig;
         $this->uri = $uri;
+
+        if (isset($verb))
+        {
+            $this->verb = $verb;
+        }
     }
 
     /**
@@ -38,7 +52,6 @@ class Router
     public function parse()
     {
         $uriComponents = parse_url($this->uri);
-
         if (!isset($uriComponents['path']))
         {
             throw new RouterException('Unable to parse the route', 500);
@@ -51,12 +64,23 @@ class Router
 
         foreach ($this->appConfig['routes'] as $route)
         {
-            if (!isset($route['regex']) || !isset($route['controller']) || !isset($route['action']))
+            // Validate route params
+            if (
+                !isset($route['regex'])
+                || !isset($route['controller'])
+                || !isset($route['action'])
+            )
             {
                 throw new RouterException('Invalid route config', 500);
             }
 
-            if (preg_match($route['regex'], $this->uri, $matches))
+            // Default verb
+            if (!isset($route['verb']))
+            {
+                $route['verb'] = self::DEFAULT_VERB;
+            }
+
+            if (preg_match($route['regex'], $this->uri, $matches) && $route['verb'] === $this->verb)
             {
                 $route['params'] = array_slice($matches, 1);
                 return $route;

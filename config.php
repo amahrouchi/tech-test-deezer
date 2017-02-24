@@ -13,6 +13,7 @@ $config = [
     'routes' => [
         [
             'regex'      => '#^/user/(\d+)$#',
+            'verb'       => 'GET',
             'controller' => '\controllers\UserController',
             'action'     => 'view'
         ],
