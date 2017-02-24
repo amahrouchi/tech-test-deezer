@@ -19,7 +19,6 @@ class Autoload
      */
     public function run($classname)
     {
-        echo $classname;
         $path = str_replace('\\', '/', $classname);
 
         $classPath = $this->webRoot . '/classes/' . $path . '.php';
