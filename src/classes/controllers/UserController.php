@@ -10,6 +10,7 @@ class UserController extends RestController
 {
     /**
      * View a user's information
+     * @param int $userId
      * @return string
      */
     public function view($userId)

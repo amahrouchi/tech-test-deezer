@@ -7,6 +7,10 @@ use exceptions\RouterException;
  */
 class Router
 {
+    /**
+     * The default http verb to use
+     * @var string
+     */
     const DEFAULT_VERB = 'GET';
 
     /**
