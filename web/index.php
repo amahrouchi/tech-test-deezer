@@ -9,6 +9,13 @@ $appConfig = require_once(__DIR__ . '/../src/config.php');
 
 try
 {
+    // Database
+    $dsn = $appConfig['database']['dsn'];
+    $user = $appConfig['database']['user'];
+    $password = $appConfig['database']['password'];
+    $pdo = new PDO($dsn, $user, $password);
+    \models\ActiveRecord::setPDO($pdo);
+
     // Routing
     $router         = new Router($appConfig, $_SERVER['REQUEST_URI']);
     $controllerInfo = $router->parse();
@@ -24,7 +31,11 @@ catch (\exceptions\RouterException $e)
 {
     header('Content-Type', 'text/html');
     http_response_code($e->getCode());
-
+    echo $e->getMessage();
+}
+catch (\Exception $e)
+{
+    header('Content-Type', 'text/html');
     echo $e->getMessage();
 }
 

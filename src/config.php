@@ -10,6 +10,12 @@
  */
 
 $config = [
+    'database' => [
+        'dsn' => 'mysql:host=localhost;dbname=deezer;charset=utf8mb4',
+        'user' => 'deezer',
+        'password' => 'deezer'
+    ],
+
     'routes' => [
         [
             'regex'      => '#^/user/(\d+)$#',
