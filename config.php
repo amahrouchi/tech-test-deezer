@@ -13,14 +13,9 @@ $config = [
     'routes' => [
         [
             'regex'      => '#^/user/(\d+)$#',
-            'controller' => 'controllers/UserController',
+            'controller' => '\controllers\UserController',
             'action'     => 'view'
         ],
-        [
-            'regex'      => '#^/user/(\d+)/playlist/(\d+)$#',
-            'controller' => 'controllers/PlaylistController',
-            'action'     => 'view'
-        ]
     ]
 ];
 
