@@ -52,10 +52,20 @@ abstract class ActiveRecord
     }
 
     /**
+     * Returns an attribute
+     * @param string $attribute
+     * @return mixed|null
+     */
+    public function get($attribute)
+    {
+        return isset($this->attributes[$attribute]) ? $this->attributes[$attribute] : null;
+    }
+
+    /**
      * @param int|array $id
      * @return bool
      */
-    public function get($id)
+    public function load($id)
     {
         if (is_scalar($id))
         {

@@ -18,11 +18,18 @@ class SongController extends RestController
         $song = new Song();
 
         // Unknown song
-        if (!$song->get($songId))
+        if (!$song->load($songId))
         {
             throw HttpException::factory('Unknown song', HttpException::NOT_FOUND);
         }
 
-        return $this->render($song->getAttributes());
+        // Build response
+        $response = [
+            'songs' => [
+                $song->get('song_id') => $song->getAttributes()
+            ]
+        ];
+
+        return $this->render($response);
     }
 }

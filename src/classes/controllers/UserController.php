@@ -22,11 +22,18 @@ class UserController extends RestController
         $user = new User();
 
         // Unknown user
-        if (!$user->get($userId))
+        if (!$user->load($userId))
         {
             throw HttpException::factory('Unknown user', HttpException::NOT_FOUND);
         }
 
-        return $this->render($user->getAttributes());
+        // Build response
+        $response = [
+            'users' => [
+                $user->get('user_id') => $user->getAttributes()
+            ]
+        ];
+
+        return $this->render($response);
     }
 }
