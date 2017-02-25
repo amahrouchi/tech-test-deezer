@@ -27,16 +27,15 @@ try
 
     echo call_user_func_array([$controller, $action], $params);
 }
-catch (\exceptions\RouterException $e)
+catch (\exceptions\HttpException $e)
 {
-    header('Content-Type', 'text/html');
+    header('Content-Type', 'application/json');
     http_response_code($e->getCode());
     echo $e->getMessage();
 }
 catch (\Exception $e)
 {
     header('Content-Type', 'text/html');
-    echo $e->getMessage();
+    http_response_code(500);
+    echo get_class($e) . ': ' . $e->getMessage();
 }
-
-

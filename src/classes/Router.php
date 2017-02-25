@@ -1,6 +1,6 @@
 <?php
 
-use exceptions\RouterException;
+use exceptions\HttpException;
 
 /**
  * Router class
@@ -51,19 +51,19 @@ class Router
     /**
      * Parses the current URI to define the controller and action to call
      * @return array
-     * @throws RouterException
+     * @throws HttpException
      */
     public function parse()
     {
         $uriComponents = parse_url($this->uri);
         if (!isset($uriComponents['path']))
         {
-            throw new RouterException('Unable to parse the route', 500);
+            throw HttpException::factory('Unable to parse the route', HttpException::INTERNAL_SERVER_ERROR);
         }
 
         if (!isset($this->appConfig['routes']))
         {
-            throw new RouterException('Routes not defined in the app configuration.', 500);
+            throw HttpException::factory('Routes not defined in the app configuration.', HttpException::INTERNAL_SERVER_ERROR);
         }
 
         foreach ($this->appConfig['routes'] as $route)
@@ -75,7 +75,7 @@ class Router
                 || !isset($route['action'])
             )
             {
-                throw new RouterException('Invalid route config', 500);
+                throw HttpException::factory('Invalid route config', HttpException::INTERNAL_SERVER_ERROR);
             }
 
             // Default verb
@@ -91,7 +91,7 @@ class Router
             }
         }
 
-        throw new RouterException('Route not found', 404);
+        throw HttpException::factory('Route not found', HttpException::NOT_FOUND);
     }
 
 }
