@@ -5,7 +5,7 @@
  * GET /user/id
  * GET /song/id
  * GET /user/id/songs
- * PUT /user/id/songs/id
+ * POST /user/id/songs
  * DELETE /user/id/songs/id
  */
 
@@ -29,6 +29,13 @@ $config = [
             'verb'       => 'GET',
             'controller' => '\controllers\SongController',
             'action'     => 'view'
+        ],
+
+        [
+            'regex'      => '#^/users/(\d+)/songs$#',
+            'verb'       => 'GET',
+            'controller' => '\controllers\UserSongController',
+            'action'     => 'listSongs'
         ],
     ]
 ];
