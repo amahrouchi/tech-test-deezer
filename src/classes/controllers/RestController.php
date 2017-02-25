@@ -21,7 +21,7 @@ class RestController
      */
     private function initHeaders()
     {
-        header('Content-Type', 'application/json');
+        header('Content-Type: application/json');
     }
 
     /**

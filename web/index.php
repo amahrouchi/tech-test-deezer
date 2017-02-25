@@ -29,13 +29,13 @@ try
 }
 catch (\exceptions\HttpException $e)
 {
-    header('Content-Type', 'application/json');
+    header('Content-Type: application/json');
     http_response_code($e->getCode());
     echo $e->getMessage();
 }
 catch (\Exception $e)
 {
-    header('Content-Type', 'text/html');
+    header('Content-Type: text/html');
     http_response_code(500);
     echo get_class($e) . ': ' . $e->getMessage();
 }
