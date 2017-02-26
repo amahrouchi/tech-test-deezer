@@ -154,6 +154,43 @@ abstract class ActiveRecord
         return $statement->rowCount();
     }
 
+    /**
+     * Deletes the current object in the DB
+     * @return int
+     */
+    public function delete()
+    {
+        // Check primary key existence
+        $primaryKey = isset(self::$primaryKey[get_called_class()]) ? self::$primaryKey[get_called_class()] : null;
+        if (is_null($primaryKey))
+        {
+            throw new \RuntimeException('Unknown primary key for class ' . get_called_class());
+        }
+
+        // Build DELETE query parameters
+        $bindings = [];
+        $where = [];
+        foreach ($primaryKey as $key)
+        {
+            if (!isset($this->attributes[$key]))
+            {
+                throw new \RuntimeException("Missing primary key $key in class " . get_called_class());
+            }
+
+            $currentBinding = ':' . $key;
+            $bindings[$currentBinding] = $this->attributes[$key];
+            $where[] = "$key = $currentBinding";
+        }
+        $where = implode(' AND ', $where);
+
+        // Build DELETE query
+        $sql = "DELETE FROM $this->tableName WHERE $where";
+        $statement = self::$pdo->prepare($sql);
+        $statement->execute($bindings);
+
+        return $statement->rowCount();
+    }
+
     //-------------------------------------------//
     //------------------ STATIC -----------------//
     //-------------------------------------------//

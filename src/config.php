@@ -44,6 +44,13 @@ $config = [
             'controller' => '\controllers\UserSongController',
             'action'     => 'add'
         ],
+
+        [
+            'regex'      => '#^/users/(\d+)/songs/(\d+)$#',
+            'verb'       => 'DELETE',
+            'controller' => '\controllers\UserSongController',
+            'action'     => 'delete'
+        ],
     ]
 ];
 

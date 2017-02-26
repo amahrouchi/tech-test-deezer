@@ -85,4 +85,43 @@ class UserSongController extends RestController
 
         return $this->listSongs($userId, false);
     }
+
+    /**
+     * Remove a song from the user's favorite
+     * @param int $userId
+     * @param int $songId
+     * @return string
+     * @throws HttpException
+     */
+    public function delete($userId, $songId)
+    {
+        // Check user
+        $user = new User();
+        if (!$user->load($userId))
+        {
+            throw HttpException::factory('Unknown user', HttpException::NOT_FOUND);
+        }
+
+        // Check song
+        $song = new Song();
+        if (!$song->load($songId))
+        {
+            throw HttpException::factory('Unknown song', HttpException::NOT_FOUND);
+        }
+
+        // Check song
+        $userSong = new UserSong();
+        if (!$userSong->load(['user_id' => $userId, 'song_id' => $songId]))
+        {
+            throw HttpException::factory("This song does not belong to the user's favorites", HttpException::BAD_REQUEST);
+        }
+
+        // Delete favorite
+        if($userSong->delete() === 0)
+        {
+            throw HttpException::factory('Favorite song not found', HttpException::NOT_FOUND);
+        }
+
+        return $this->listSongs($userId, false);
+    }
 }
