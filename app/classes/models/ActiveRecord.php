@@ -80,7 +80,7 @@ abstract class ActiveRecord
     /**
      * Sets an attribute in the current object
      * @param string $attribute
-     * @param mixed $value
+     * @param mixed  $value
      * @return $this
      */
     public function set($attribute, $value)
@@ -98,7 +98,7 @@ abstract class ActiveRecord
         if (is_scalar($id))
         {
             $key = reset(self::$primaryKey[get_called_class()]);
-            $id = [$key => $id];
+            $id  = [$key => $id];
         }
         elseif (!is_array($id) || empty($id))
         {
@@ -107,18 +107,18 @@ abstract class ActiveRecord
 
         // Prepare the condition on the primary key
         $keyCondition = [];
-        $paramToBind = [];
+        $paramToBind  = [];
         foreach ($id as $field => $value)
         {
             $keyCondition[] = $field . ' = :' . $field;
 
-            $binding = ':' . $field;
+            $binding               = ':' . $field;
             $paramToBind[$binding] = $value;
         }
         $keyCondition = '(' . implode(' AND ', $keyCondition) . ')';
 
         // Get the data
-        $sql = "SELECT * FROM $this->tableName WHERE " . $keyCondition . ' LIMIT 1';
+        $sql       = "SELECT * FROM $this->tableName WHERE " . $keyCondition . ' LIMIT 1';
         $statement = self::$pdo->prepare($sql);
         $statement->execute($paramToBind);
         $line = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -136,18 +136,18 @@ abstract class ActiveRecord
     {
         // Builds query fields and bindings
         $bindings = [];
-        $fields = [];
+        $fields   = [];
         foreach ($this->attributes as $field => $value)
         {
-            $fields[] = "`$field`";
-            $bindings[':'.$field] = $value;
+            $fields[]               = "`$field`";
+            $bindings[':' . $field] = $value;
         }
 
         $fields = '(' . implode(',', $fields) . ')';
         $values = '(' . implode(',', array_keys($bindings)) . ')';
 
         // Build INSERT query
-        $query = "INSERT INTO $this->tableName $fields VALUES $values";
+        $query     = "INSERT INTO $this->tableName $fields VALUES $values";
         $statement = self::$pdo->prepare($query);
         $statement->execute($bindings);
 
@@ -169,7 +169,7 @@ abstract class ActiveRecord
 
         // Build DELETE query parameters
         $bindings = [];
-        $where = [];
+        $where    = [];
         foreach ($primaryKey as $key)
         {
             if (!isset($this->attributes[$key]))
@@ -177,14 +177,14 @@ abstract class ActiveRecord
                 throw new \RuntimeException("Missing primary key $key in class " . get_called_class());
             }
 
-            $currentBinding = ':' . $key;
+            $currentBinding            = ':' . $key;
             $bindings[$currentBinding] = $this->attributes[$key];
-            $where[] = "$key = $currentBinding";
+            $where[]                   = "$key = $currentBinding";
         }
         $where = implode(' AND ', $where);
 
         // Build DELETE query
-        $sql = "DELETE FROM $this->tableName WHERE $where";
+        $sql       = "DELETE FROM $this->tableName WHERE $where";
         $statement = self::$pdo->prepare($sql);
         $statement->execute($bindings);
 
@@ -239,7 +239,7 @@ abstract class ActiveRecord
             }
 
             // Retrieve table schema
-            $sql = "DESC $this->tableName";
+            $sql       = "DESC $this->tableName";
             $statement = self::$pdo->query($sql);
 
             if ($statement === false)
@@ -253,7 +253,7 @@ abstract class ActiveRecord
             {
                 self::$schema[get_called_class()][$item['Field']] = $item;
             }
-            
+
             // Retrieve primary key
             foreach ($description as $field)
             {

@@ -10,10 +10,10 @@ $appConfig = require_once(__DIR__ . '/../app/config.php');
 try
 {
     // Database
-    $dsn = $appConfig['database']['dsn'];
-    $user = $appConfig['database']['user'];
+    $dsn      = $appConfig['database']['dsn'];
+    $user     = $appConfig['database']['user'];
     $password = $appConfig['database']['password'];
-    $pdo = new PDO($dsn, $user, $password);
+    $pdo      = new PDO($dsn, $user, $password);
     \models\ActiveRecord::setPDO($pdo);
 
     // Routing

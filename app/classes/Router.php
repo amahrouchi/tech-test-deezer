@@ -40,7 +40,7 @@ class Router
     public function __construct($appConfig, $uri, $verb = null)
     {
         $this->appConfig = $appConfig;
-        $this->uri = $uri;
+        $this->uri       = $uri;
 
         if (isset($verb))
         {

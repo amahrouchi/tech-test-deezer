@@ -15,7 +15,7 @@ class UserSongController extends RestController
 {
     /**
      * List a user's favorite songs
-     * @param int $userId
+     * @param int  $userId
      * @param bool $checkUser
      * @return string
      * @throws HttpException
@@ -30,7 +30,7 @@ class UserSongController extends RestController
         }
 
         // Load songs
-        $songs = [];
+        $songs    = [];
         $tmpSongs = $user->getSongs();
         foreach ($tmpSongs as $song)
         {
@@ -117,7 +117,7 @@ class UserSongController extends RestController
         }
 
         // Delete favorite
-        if($userSong->delete() === 0)
+        if ($userSong->delete() === 0)
         {
             throw HttpException::factory('Favorite song not found', HttpException::NOT_FOUND);
         }

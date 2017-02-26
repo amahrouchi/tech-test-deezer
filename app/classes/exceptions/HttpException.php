@@ -37,22 +37,22 @@ class HttpException extends \Exception
 
             case self::BAD_REQUEST:
                 $details['code'] = 400;
-                $exception = new BadRequestException();
+                $exception       = new BadRequestException();
                 break;
 
             case self::NOT_FOUND:
                 $details['code'] = 404;
-                $exception = new NotFoundException();
+                $exception       = new NotFoundException();
                 break;
 
             case self::INTERNAL_SERVER_ERROR:
             default:
                 $details['code'] = 500;
-                $exception = new InternalServerErrorException();
+                $exception       = new InternalServerErrorException();
                 break;
         }
 
-        $exception->code = $details['code'];
+        $exception->code    = $details['code'];
         $exception->message = json_encode($details, JSON_NUMERIC_CHECK);
 
         return $exception;
