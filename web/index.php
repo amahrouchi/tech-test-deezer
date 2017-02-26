@@ -35,7 +35,9 @@ catch (\exceptions\HttpException $e)
 }
 catch (\Exception $e)
 {
-    header('Content-Type: text/html');
-    http_response_code(500);
-    echo get_class($e) . ': ' . $e->getMessage();
+    header('Content-Type: application/json');
+    echo json_encode([
+        'exception' => get_class($e),
+        'message' => $e->getMessage()
+    ]);
 }
