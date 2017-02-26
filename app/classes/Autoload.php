@@ -5,15 +5,19 @@
  */
 class Autoload
 {
-    private $webRoot;
+    /**
+     * The application root folder
+     * @var string
+     */
+    private $appRoot;
 
     /**
      * Autoload constructor.
-     * @param string $webRoot Our app web root
+     * @param string $appRoot Our app web root
      */
-    public function __construct($webRoot)
+    public function __construct($appRoot)
     {
-        $this->webRoot = $webRoot;
+        $this->appRoot = $appRoot;
     }
 
     /**
@@ -24,7 +28,7 @@ class Autoload
     {
         $path = str_replace('\\', '/', $classname);
 
-        $classPath = $this->webRoot . '/classes/' . $path . '.php';
+        $classPath = $this->appRoot . '/classes/' . $path . '.php';
         if (!file_exists($classPath))
         {
             throw new \RuntimeException("Unable to find $classPath");

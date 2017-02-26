@@ -4,8 +4,8 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once(__DIR__ . '/../src/autoload.php');
-$appConfig = require_once(__DIR__ . '/../src/config.php');
+require_once(__DIR__ . '/../app/autoload.php');
+$appConfig = require_once(__DIR__ . '/../app/config.php');
 
 try
 {
