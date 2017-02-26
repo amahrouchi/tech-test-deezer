@@ -17,7 +17,7 @@ try
     \models\ActiveRecord::setPDO($pdo);
 
     // Routing
-    $router         = new Router($appConfig, $_SERVER['REQUEST_URI']);
+    $router         = new Router($appConfig, $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
     $controllerInfo = $router->parse();
 
     // Controller call

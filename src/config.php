@@ -37,6 +37,13 @@ $config = [
             'controller' => '\controllers\UserSongController',
             'action'     => 'listSongs'
         ],
+
+        [
+            'regex'      => '#^/users/(\d+)/songs/(\d+)$#',
+            'verb'       => 'POST',
+            'controller' => '\controllers\UserSongController',
+            'action'     => 'add'
+        ],
     ]
 ];
 

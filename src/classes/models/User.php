@@ -1,6 +1,10 @@
 <?php
 namespace models;
 
+/**
+ * Class User
+ * @package models
+ */
 class User extends ActiveRecord
 {
     protected $tableName = 'users';

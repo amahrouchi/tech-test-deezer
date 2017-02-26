@@ -5,6 +5,10 @@ namespace controllers;
 use exceptions\HttpException;
 use models\Song;
 
+/**
+ * Class SongController
+ * @package controllers
+ */
 class SongController extends RestController
 {
     /**

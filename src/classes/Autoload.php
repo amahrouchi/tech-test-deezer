@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Handles classes autoloading
+ */
 class Autoload
 {
     private $webRoot;

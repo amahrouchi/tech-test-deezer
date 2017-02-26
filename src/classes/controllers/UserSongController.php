@@ -3,15 +3,28 @@
 namespace controllers;
 
 use exceptions\HttpException;
+use models\Song;
 use models\User;
+use models\UserSong;
 
+/**
+ * Class UserSongController
+ * @package controllers
+ */
 class UserSongController extends RestController
 {
-    public function listSongs($userId)
+    /**
+     * List a user's favorite songs
+     * @param int $userId
+     * @param bool $checkUser
+     * @return string
+     * @throws HttpException
+     */
+    public function listSongs($userId, $checkUser = true)
     {
         // Check user existence
         $user = new User();
-        if (!$user->load($userId))
+        if (!$user->load($userId) && $checkUser)
         {
             throw HttpException::factory('Unknown user', HttpException::NOT_FOUND);
         }
@@ -34,5 +47,42 @@ class UserSongController extends RestController
         ];
 
         return $this->render($response);
+    }
+
+    /**
+     * Add a song to a user favorite songs
+     * @param int $userId
+     * @param int $songId
+     * @return string
+     * @throws HttpException
+     */
+    public function add($userId, $songId)
+    {
+        // Check user
+        $user = new User();
+        if (!$user->load($userId))
+        {
+            throw HttpException::factory('Unknown user', HttpException::NOT_FOUND);
+        }
+
+        // Check song
+        $song = new Song();
+        if (!$song->load($songId))
+        {
+            throw HttpException::factory('Unknown song', HttpException::NOT_FOUND);
+        }
+
+        $userSong = new UserSong();
+        $userSong->setAttributes([
+            'user_id' => $userId,
+            'song_id' => $songId
+        ]);
+
+        if ($userSong->insert() === 0)
+        {
+            throw HttpException::factory("This song is already in the user's favorites", HttpException::BAD_REQUEST);
+        }
+
+        return $this->listSongs($userId, false);
     }
 }

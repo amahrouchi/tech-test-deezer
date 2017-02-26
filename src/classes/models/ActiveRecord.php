@@ -2,6 +2,11 @@
 
 namespace models;
 
+/**
+ * Class ActiveRecord
+ * Allow objects to be retrieved from and saved in DB
+ * @package models
+ */
 abstract class ActiveRecord
 {
     /**
@@ -52,6 +57,17 @@ abstract class ActiveRecord
     }
 
     /**
+     * Sets object attributes
+     * @param array $attributes
+     * @return $this
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    /**
      * Returns an attribute
      * @param string $attribute
      * @return mixed|null
@@ -62,6 +78,18 @@ abstract class ActiveRecord
     }
 
     /**
+     * Sets an attribute in the current object
+     * @param string $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function set($attribute, $value)
+    {
+        $this->attributes[$attribute] = $value;
+        return $this;
+    }
+
+    /**
      * @param int|array $id
      * @return bool
      */
@@ -69,7 +97,7 @@ abstract class ActiveRecord
     {
         if (is_scalar($id))
         {
-            $key = reset(static::$primaryKey);
+            $key = reset(self::$primaryKey[get_called_class()]);
             $id = [$key => $id];
         }
         elseif (!is_array($id) || empty($id))
@@ -100,6 +128,32 @@ abstract class ActiveRecord
         return !empty($this->attributes);
     }
 
+    /**
+     * Inserts the current object into the DB
+     * @return int
+     */
+    public function insert()
+    {
+        // Builds query fields and bindings
+        $bindings = [];
+        $fields = [];
+        foreach ($this->attributes as $field => $value)
+        {
+            $fields[] = "`$field`";
+            $bindings[':'.$field] = $value;
+        }
+
+        $fields = '(' . implode(',', $fields) . ')';
+        $values = '(' . implode(',', array_keys($bindings)) . ')';
+
+        // Build INSERT query
+        $query = "INSERT INTO $this->tableName $fields VALUES $values";
+        $statement = self::$pdo->prepare($query);
+        $statement->execute($bindings);
+
+        return $statement->rowCount();
+    }
+
     //-------------------------------------------//
     //------------------ STATIC -----------------//
     //-------------------------------------------//
@@ -119,7 +173,7 @@ abstract class ActiveRecord
      */
     public static function getSchema()
     {
-        return static::$schema;
+        return self::$schema;
     }
 
     //--------------------------------------------------------//
@@ -133,7 +187,7 @@ abstract class ActiveRecord
     private function initSchema()
     {
         // Init table schema
-        if (!isset(static::$schema))
+        if (!isset(self::$schema[get_called_class()]))
         {
             // Check PDO
             if (empty(self::$pdo))
@@ -156,15 +210,19 @@ abstract class ActiveRecord
                 throw new \RuntimeException("Unable to retrieve the schema of the table $this->tableName", 500);
             }
 
+            // Saves current table schema
             $description = $statement->fetchAll(\PDO::FETCH_ASSOC);
-            static::$schema = $description;
-
+            foreach ($description as $item)
+            {
+                self::$schema[get_called_class()][$item['Field']] = $item;
+            }
+            
             // Retrieve primary key
             foreach ($description as $field)
             {
                 if ($field['Key'] === 'PRI')
                 {
-                    static::$primaryKey[] = $field['Field'];
+                    self::$primaryKey[get_called_class()][] = $field['Field'];
                 }
             }
         }
